@@ -135,7 +135,7 @@ function AboutSection() {
               <span className="text-red-500">For Champions</span>
             </h2>
             <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-3 sm:mb-4">
-              Founded in 2009, Shadow Striker United has grown from a single training pitch to a full multi-sport performance academy. We combine elite-level expertise with cutting-edge technology to unlock every athlete's potential.
+              Founded in 2009, Shadow Striker United has grown from a single training pitch to a full multi-sport performance academy. We combine elite-level expertise with cutting-edge technology to unlock every athlete&apos;s potential.
             </p>
             <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-4 sm:mb-6">
               Our coaches are former professionals who understand what it takes to win at the highest level. Every program is designed to challenge, inspire, and elevate.
@@ -529,7 +529,7 @@ function AchievementsSection() {
             Our Trophy <span className="text-red-500">Cabinet</span>
           </h2>
           <p className="text-gray-400 text-sm sm:text-base max-w-xl mx-auto px-4">
-            Decades of hard work reflected in our athletes' success on every stage.
+            Decades of hard work reflected in our athletes&apos; success on every stage.
           </p>
         </div>
 

@@ -7,6 +7,9 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'Shadow Striker United - Elite Sports Academy',
   description: 'Elite coaching, performance analytics, and 360° training programs across Cricket, Football, Basketball & Taekwondo.',
+  verification: {
+    google: 'Laf571-OxduFhOAqtL5aYeBoYlDwqK0PtHKmwl8IUJg',
+  },
 };
 
 export default function RootLayout({
