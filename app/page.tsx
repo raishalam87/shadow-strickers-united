@@ -189,7 +189,7 @@ function HeroSection() {
           <div className="text-center lg:text-left">
             <div className="inline-flex items-center gap-2 bg-red-600/10 border border-red-600/30 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-4 sm:mb-6 mx-auto lg:mx-0 w-fit badge-pulse">
               <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-500 rounded-full animate-pulse" />
-              <span className="text-red-400 text-xs sm:text-sm font-medium">Now Enrolling — 2009 Season</span>
+              <span className="text-red-400 text-xs sm:text-sm font-medium">Now Enrolling — 2026 Season</span>
               <Sparkles className="w-3 h-3 text-yellow-400 animate-sparkle" />
             </div>
 
@@ -286,8 +286,6 @@ function HeroSection() {
     </section>
   );
 }
-
-// ... (rest of the components - AboutSection, Carousel, ProgramsSection, CoachesSection, AchievementsSection, BlogSection, TestimonialsSection remain exactly the same)
 
 /* ─── About ─────────────────────────────────────────────────── */
 function AboutSection() {
@@ -431,7 +429,11 @@ function Carousel({ items, renderItem, itemsPerView = 3, title, autoSlide = true
           currentItemsPerView === 2 ? 'grid-cols-1 sm:grid-cols-2' :
           'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
         }`}>
-          {visibleItems.map((item, idx) => renderItem(item, idx))}
+          {visibleItems.map((item, idx) => (
+            <div key={item.id || item.sport || item.name || `item-${idx}`}>
+              {renderItem(item, idx)}
+            </div>
+          ))}
         </div>
 
         {showNavigation && (
@@ -470,30 +472,35 @@ function Carousel({ items, renderItem, itemsPerView = 3, title, autoSlide = true
 function ProgramsSection() {
   const programs = [
     {
+      id: 'cricket',
       sport: 'Cricket',
       img: 'https://images.pexels.com/photos/3657154/pexels-photo-3657154.jpeg?auto=compress&cs=tinysrgb&w=600',
       levels: ['Beginner', 'Intermediate', 'Elite'],
       desc: 'Comprehensive batting, bowling, and fielding development with biomechanical analysis.',
     },
     {
+      id: 'football',
       sport: 'Football',
       img: 'https://images.pexels.com/photos/46798/the-ball-stadion-football-the-pitch-46798.jpeg?auto=compress&cs=tinysrgb&w=600',
       levels: ['Youth', 'Amateur', 'Pro'],
       desc: 'Technical skills, tactical understanding, and match-speed conditioning.',
     },
     {
+      id: 'basketball',
       sport: 'Basketball',
       img: 'https://images.pexels.com/photos/1752757/pexels-photo-1752757.jpeg?auto=compress&cs=tinysrgb&w=600',
       levels: ['Beginner', 'Advanced', 'Competitive'],
       desc: 'Dribbling, shooting mechanics, court vision, and team play systems.',
     },
     {
+      id: 'taekwondo',
       sport: 'Taekwondo',
       img: 'https://images.pexels.com/photos/7045585/pexels-photo-7045585.jpeg?auto=compress&cs=tinysrgb&w=600',
       levels: ['White Belt', 'Color Belt', 'Black Belt'],
       desc: 'Discipline, flexibility, self-defence, and competition sparring.',
     },
     {
+      id: 'skating',
       sport: 'Skating',
       img: 'https://images.pexels.com/photos/274839/pexels-photo-274839.jpeg?auto=compress&cs=tinysrgb&w=600',
       levels: ['Beginner', 'Intermediate', 'Advanced'],
@@ -560,6 +567,7 @@ function ProgramsSection() {
 function CoachesSection() {
   const coaches = [
     {
+      id: 'shaiju-bala',
       name: 'Mr. SHAIJU BALA',
       sport: 'MANAGER',
       exp: '20 yrs',
@@ -567,6 +575,7 @@ function CoachesSection() {
       bio: '20 plus years of experience in the field of physical education (games and sports/ fitness)',
     },
     {
+      id: 'trimohan-kumar',
       name: 'Mr. TRIMOHAN KUMAR',
       sport: 'C-LICENSE FOOTBALL COACH',
       exp: '17 yrs',
@@ -574,6 +583,7 @@ function CoachesSection() {
       bio: 'AFC C-LICENSE FOOTBALL COACH WITH MORE THAN 17 YEARS OF EXPERIENCE IN PLAYER DEVELOPMENT, TACTICAL TRAINING, AND COMPETITIVE FOOTBALL.',
     },
     {
+      id: 'yogesh-bhati',
       name: 'Mr. YOGESH BHATI',
       sport: 'TAEKWONDO COACH',
       exp: '12 yrs',
@@ -581,6 +591,7 @@ function CoachesSection() {
       bio: 'PLAYED MORE THAN 5 Nationals and 2 more international, he is associated with Noida taekwondo association',
     },
     {
+      id: 'aditya-singh',
       name: 'Mr. ADITYA KUMAR SINGH',
       sport: 'BASKETBALL',
       exp: '15 yrs',
@@ -588,6 +599,7 @@ function CoachesSection() {
       bio: 'Former national-level basketball player with 15+ years of coaching experience, dedicated to building skilled, disciplined, and high-performance athletes.',
     },
     {
+      id: 'ajay-singh',
       name: 'Mr. AJAY KUMAR SINGH',
       sport: 'SENIOR COACH',
       exp: '20 yrs',
@@ -595,6 +607,7 @@ function CoachesSection() {
       bio: 'Experienced FIFA B Licensed Coach with over 20 years of developing players and leading teams to success.',
     },
     {
+      id: 'ravikant-thakur',
       name: 'Mr. RAVIKANT THAKUR',
       sport: 'SENIOR SKATING COACH',
       exp: '20 yrs',
@@ -602,6 +615,7 @@ function CoachesSection() {
       bio: 'Secretary, Rollball Association, G.B. Nagar | 20+ years of professional coaching experience in skating & rollball',
     },
     {
+      id: 'aakash-mourya',
       name: 'Mr. AAKASH MOURYA',
       sport: 'ASST. COACH',
       exp: '5 yrs',
@@ -609,6 +623,7 @@ function CoachesSection() {
       bio: 'Playing for Delhi University.',
     },
     {
+      id: 'inderjeet',
       name: 'Mr. INDERJEET',
       sport: 'ASST. COACH',
       exp: '5 yrs',
@@ -616,6 +631,7 @@ function CoachesSection() {
       bio: 'Playing for Delhi University.',
     },
     {
+      id: 'vikki-gautam',
       name: 'Mr. VIKKI GAUTAM ',
       sport: 'SKATING, rollball',
       exp: '6 yrs',
