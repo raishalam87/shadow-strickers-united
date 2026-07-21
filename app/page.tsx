@@ -609,14 +609,14 @@ function CoachesSection() {
       bio: 'Playing for Delhi University.',
     },
     {
-      name: 'Ms. INDERJEET',
+      name: 'Mr. INDERJEET',
       sport: 'ASST. COACH',
       exp: '5 yrs',
       img: 'https://i.ibb.co/ZR2DJbCV/Whats-App-Image-2026-06-04-at-4-15-42-PM-1.jpg',
       bio: 'Playing for Delhi University.',
     },
     {
-      name: 'Ms. VIKKI GAUTAM ',
+      name: 'Mr. VIKKI GAUTAM ',
       sport: 'SKATING, rollball',
       exp: '6 yrs',
       img: 'https://i.ibb.co/gbJWfgKV/Whats-App-Image-2026-07-11-at-9-11-56-AM.jpg',
