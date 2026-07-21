@@ -40,12 +40,12 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleNav('#home')}>
-            <div className="bg-red-600 rounded p-1">
-              <Zap className="w-5 h-5 text-white fill-white" />
-            </div>
-            <span className="text-white font-bold text-lg tracking-wide">
-              SHADOW STRIKERS <span className="text-red-500">UNITED</span>
-            </span>
+           
+            <img 
+    src="https://i.ibb.co/PzP99zS8/Whats-App-Image-2026-07-21-at-11-29-11-AM.jpg" 
+    alt="Shadow Strikers United Logo"
+    className="w-14 h-14 object-contain rounded-full"
+  />
           </div>
 
           {/* Desktop Links */}
