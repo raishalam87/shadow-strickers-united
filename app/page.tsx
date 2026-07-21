@@ -132,16 +132,16 @@ const StyledAnimatedCounter = ({
         {icon}
       </div>
       
-      {/* Animated Counter */}
+      {/* Animated Counter - Only show the number, label will be shown separately */}
       <div className="relative">
         <div className={`text-xl sm:text-2xl lg:text-3xl font-extrabold bg-gradient-to-r ${gradient} bg-clip-text text-transparent animate-value-pulse`}>
           <AnimatedCounter 
             end={end} 
             suffix={suffix} 
             duration={duration}
-            label={label}
           />
         </div>
+        {/* Label shown separately */}
         <div className="text-gray-400 text-xs sm:text-sm font-medium mt-0.5 sm:mt-1 group-hover:text-white transition-colors duration-300">
           {label}
         </div>
@@ -189,7 +189,7 @@ function HeroSection() {
           <div className="text-center lg:text-left">
             <div className="inline-flex items-center gap-2 bg-red-600/10 border border-red-600/30 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-4 sm:mb-6 mx-auto lg:mx-0 w-fit badge-pulse">
               <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-500 rounded-full animate-pulse" />
-              <span className="text-red-400 text-xs sm:text-sm font-medium">Now Enrolling — 2026 Season</span>
+              <span className="text-red-400 text-xs sm:text-sm font-medium">Now Enrolling — 2009 Season</span>
               <Sparkles className="w-3 h-3 text-yellow-400 animate-sparkle" />
             </div>
 
@@ -287,7 +287,7 @@ function HeroSection() {
   );
 }
 
-// Rest of the components remain the same...
+// ... (rest of the components - AboutSection, Carousel, ProgramsSection, CoachesSection, AchievementsSection, BlogSection, TestimonialsSection remain exactly the same)
 
 /* ─── About ─────────────────────────────────────────────────── */
 function AboutSection() {
