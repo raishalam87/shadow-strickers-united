@@ -135,7 +135,12 @@ const StyledAnimatedCounter = ({
       {/* Animated Counter */}
       <div className="relative">
         <div className={`text-xl sm:text-2xl lg:text-3xl font-extrabold bg-gradient-to-r ${gradient} bg-clip-text text-transparent animate-value-pulse`}>
-          <AnimatedCounter end={end} suffix={suffix} duration={duration} />
+          <AnimatedCounter 
+            end={end} 
+            suffix={suffix} 
+            duration={duration}
+            label={label}
+          />
         </div>
         <div className="text-gray-400 text-xs sm:text-sm font-medium mt-0.5 sm:mt-1 group-hover:text-white transition-colors duration-300">
           {label}
@@ -604,14 +609,14 @@ function CoachesSection() {
       bio: 'Playing for Delhi University.',
     },
     {
-      name: 'Mr. INDERJEET',
+      name: 'Ms. INDERJEET',
       sport: 'ASST. COACH',
       exp: '5 yrs',
       img: 'https://i.ibb.co/ZR2DJbCV/Whats-App-Image-2026-06-04-at-4-15-42-PM-1.jpg',
       bio: 'Playing for Delhi University.',
     },
     {
-      name: 'Mr. VIKKI GAUTAM ',
+      name: 'Ms. VIKKI GAUTAM ',
       sport: 'SKATING, rollball',
       exp: '6 yrs',
       img: 'https://i.ibb.co/gbJWfgKV/Whats-App-Image-2026-07-11-at-9-11-56-AM.jpg',
