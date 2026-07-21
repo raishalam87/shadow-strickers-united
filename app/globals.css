@@ -80,3 +80,212 @@
     @apply bg-background text-foreground;
   }
 }
+/* Typing Cursor */
+/* ===== STAT CARD ANIMATIONS ===== */
+.stat-card {
+  position: relative;
+  transition: all 0.3s ease;
+  animation: cardFloat 3s ease-in-out infinite;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0s; }
+.stat-card:nth-child(2) { animation-delay: 0.5s; }
+.stat-card:nth-child(3) { animation-delay: 1s; }
+.stat-card:nth-child(4) { animation-delay: 1.5s; }
+
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.stat-card:hover {
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* ===== ICON ANIMATIONS ===== */
+.animate-icon-float {
+  animation: iconFloat 2s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseSlow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+/* ===== VALUE ANIMATION ===== */
+.animate-value-pulse {
+  animation: valuePulse 2s ease-in-out infinite;
+}
+
+@keyframes valuePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+/* ===== BORDER PULSE ANIMATION ===== */
+.animate-border-pulse {
+  animation: borderPulse 3s ease-in-out infinite;
+}
+
+@keyframes borderPulse {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.6; }
+}
+
+/* ===== BACKGROUND FLOAT ANIMATIONS ===== */
+.animate-float {
+  animation: floatBg 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: floatBg 6s ease-in-out infinite 2s;
+}
+
+.animate-float-slow {
+  animation: floatBg 8s ease-in-out infinite 1s;
+}
+
+@keyframes floatBg {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, -30px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+}
+
+/* ===== PARTICLE ANIMATIONS ===== */
+.animate-particle {
+  animation: particleMove 8s linear infinite;
+}
+
+.animate-particle-delayed {
+  animation: particleMove 8s linear infinite 2s;
+}
+
+.animate-particle-slow {
+  animation: particleMove 12s linear infinite 4s;
+}
+
+@keyframes particleMove {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; }
+  25% { transform: translate(30px, -40px) scale(1.5); opacity: 0.8; }
+  50% { transform: translate(-20px, -80px) scale(0.8); opacity: 1; }
+  75% { transform: translate(40px, -120px) scale(1.2); opacity: 0.8; }
+  100% { transform: translate(0, -160px) scale(1); opacity: 0; }
+}
+
+/* ===== SPARKLE ANIMATION ===== */
+.animate-sparkle {
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  50% { opacity: 0.5; transform: scale(1.2) rotate(180deg); }
+}
+
+/* ===== TYPING CURSOR ===== */
+.typing-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  background-color: #ef4444;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 0.8s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ===== BADGE PULSE ===== */
+.badge-pulse {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { border-color: rgba(239, 68, 68, 0.3); }
+  50% { border-color: rgba(239, 68, 68, 0.6); }
+}
+
+/* ===== BUTTON ANIMATIONS ===== */
+.btn-join-primary {
+  position: relative;
+  overflow: hidden;
+  animation: buttonColorShift 4s ease-in-out infinite;
+}
+
+.btn-join-primary:hover {
+  transform: scale(1.05);
+  animation-play-state: paused;
+}
+
+.btn-programs-primary {
+  position: relative;
+  overflow: hidden;
+  animation: borderColorShift 4s ease-in-out infinite;
+}
+
+.btn-programs-primary:hover {
+  transform: scale(1.05);
+  animation-play-state: paused;
+}
+
+@keyframes buttonColorShift {
+  0% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(59, 130, 246, 0.1); }
+  25% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.4), 0 0 50px rgba(139, 92, 246, 0.15); }
+  50% { box-shadow: 0 0 30px rgba(236, 72, 153, 0.4), 0 0 50px rgba(236, 72, 153, 0.15); }
+  75% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.4), 0 0 50px rgba(139, 92, 246, 0.15); }
+  100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(59, 130, 246, 0.1); }
+}
+
+@keyframes borderColorShift {
+  0% { border-color: rgba(59, 130, 246, 0.5); box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
+  25% { border-color: rgba(139, 92, 246, 0.6); box-shadow: 0 0 30px rgba(139, 92, 246, 0.3); }
+  50% { border-color: rgba(236, 72, 153, 0.6); box-shadow: 0 0 30px rgba(236, 72, 153, 0.3); }
+  75% { border-color: rgba(139, 92, 246, 0.6); box-shadow: 0 0 30px rgba(139, 92, 246, 0.3); }
+  100% { border-color: rgba(59, 130, 246, 0.5); box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
+}
+
+.animate-button-shine {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: shineSweep 3s ease-in-out infinite;
+}
+
+@keyframes shineSweep {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-button-glow {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+.animate-border-glow {
+  animation: borderGlow 3s ease-in-out infinite;
+}
+
+@keyframes borderGlow {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.6; }
+}
+
+.delay-1000 {
+  animation-delay: 1000ms;
+}
