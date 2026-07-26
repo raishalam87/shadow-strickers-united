@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 export default function StickyWhatsApp() {
   const [isHovered, setIsHovered] = useState(false);
-  const whatsappNumber = '9540879700'; // Replace with your WhatsApp number
+  const whatsappNumber = '9667078797'; // Replace with your WhatsApp number
   const whatsappMessage = 'Hello! I am interested in Shadow Striker United programs.';
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 

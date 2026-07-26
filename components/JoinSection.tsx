@@ -112,7 +112,7 @@ export default function JoinSection() {
 *_Where Passion Meets Performance_*`;
 
     // Your WhatsApp number (with country code, no plus sign or spaces)
-    const phoneNumber = '919540879700'; // Change this to your WhatsApp number
+    const phoneNumber = '919667078797'; // Change this to your WhatsApp number
     
     // Create WhatsApp link
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;

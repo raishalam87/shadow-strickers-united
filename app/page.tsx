@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { ChevronLeft, ChevronRight, Quote, Star, X } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import JoinSection from '@/components/JoinSection';
 import ContactSection from '@/components/ContactSection';
@@ -14,14 +15,10 @@ import {
   Users,
   Crown,
   Calendar,
-  Star,
-  ChevronRight,
-  Quote,
   ArrowRight,
   Activity,
   Shield,
   Award,
-  ChevronLeft,
   Sparkles,
 } from 'lucide-react';
 
@@ -842,9 +839,20 @@ function BlogSection() {
   );
 }
 
-/* ─── Testimonials ───────────────────────────────────────────── */
+/* ─── Testimonials Section ───────────────────────────────────────────────── */
 function TestimonialsSection() {
-  const testimonials = [
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    sport: '',
+    rating: 5,
+    feedback: ''
+  });
+  const [visibleCount, setVisibleCount] = useState(3);
+
+  const [testimonials, setTestimonials] = useState([
     {
       name: 'Arjun Mehta',
       sport: 'Cricket',
@@ -863,41 +871,343 @@ function TestimonialsSection() {
       rating: 5,
       text: 'Master Ji-Won is an incredible coach. The discipline and technique I learned here helped me win gold at the national open.',
     },
+  ]);
+
+  // Update visible count based on screen size
+  useEffect(() => {
+    const updateVisibleCount = () => {
+      if (window.innerWidth >= 1024) {
+        setVisibleCount(3);
+      } else if (window.innerWidth >= 768) {
+        setVisibleCount(2);
+      } else {
+        setVisibleCount(1);
+      }
+    };
+
+    updateVisibleCount();
+    window.addEventListener('resize', updateVisibleCount);
+    return () => window.removeEventListener('resize', updateVisibleCount);
+  }, []);
+
+  // Auto-slide carousel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [testimonials.length]);
+
+  // Array of border colors for animation
+  const borderColors = [
+    'border-blue-500/60 shadow-blue-500/20',
+    'border-purple-500/60 shadow-purple-500/20',
+    'border-pink-500/60 shadow-pink-500/20',
+    'border-green-500/60 shadow-green-500/20',
+    'border-yellow-500/60 shadow-yellow-500/20',
+    'border-red-500/60 shadow-red-500/20',
   ];
 
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Add new testimonial
+    const newTestimonial = {
+      name: formData.name,
+      sport: formData.sport,
+      rating: parseInt(formData.rating.toString()),
+      text: formData.feedback
+    };
+    
+    setTestimonials((prev) => [...prev, newTestimonial]);
+    
+    // Reset form
+    setFormData({
+      name: '',
+      sport: '',
+      rating: 5,
+      feedback: ''
+    });
+    
+    // Close form and show popup
+    setIsFormOpen(false);
+    setShowPopup(true);
+    
+    // Auto-hide popup after 3 seconds
+    setTimeout(() => {
+      setShowPopup(false);
+    }, 3000);
+  };
+
+  const getVisibleTestimonials = () => {
+    const items = [];
+    const total = testimonials.length;
+    
+    for (let i = 0; i < visibleCount; i++) {
+      const index = (currentIndex + i) % total;
+      items.push({ ...testimonials[index], index, isActive: i === 0 });
+    }
+    
+    return items;
+  };
+
+  const visibleTestimonials = getVisibleTestimonials();
+
   return (
-    <section className="bg-black py-12 lg:py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="bg-black py-12 lg:py-16 relative overflow-hidden">
+      {/* Animated background gradient */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-0 -left-4 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+        <div className="absolute bottom-0 -right-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-6 sm:mb-8">
           <span className="text-blue-400 text-xs sm:text-sm font-semibold tracking-widest uppercase">Testimonials</span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mt-2">
             What Our <span className="text-blue-400">Athletes</span> Say
           </h2>
+          <p className="text-gray-400 mt-2 text-sm sm:text-base max-w-2xl mx-auto">
+            Real stories from real athletes who&apos;ve transformed their game with us
+          </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {testimonials.map(({ name, sport, rating, text }) => (
-            <div
-              key={name}
-              className="bg-gray-900 border border-gray-800 rounded-xl sm:rounded-2xl p-5 sm:p-7 hover:border-blue-500/40 transition-colors h-full"
-            >
-              <Quote className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600/40 mb-3 sm:mb-4" />
-              <p className="text-gray-300 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">{text}</p>
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-white font-semibold text-sm sm:text-base">{name}</div>
-                  <div className="text-blue-400 text-xs">{sport}</div>
+        {/* Carousel Container */}
+        <div className="relative">
+          <div className={`grid gap-4 sm:gap-6 ${
+            visibleCount === 3 ? 'lg:grid-cols-3 md:grid-cols-2 grid-cols-1' :
+            visibleCount === 2 ? 'md:grid-cols-2 grid-cols-1' :
+            'grid-cols-1'
+          }`}>
+            {visibleTestimonials.map((testimonial, idx) => {
+              const colorIndex = (testimonial.index + idx) % borderColors.length;
+              return (
+                <div
+                  key={`${testimonial.name}-${idx}`}
+                  className={`
+                    bg-gray-900 border-2 rounded-xl sm:rounded-2xl p-5 sm:p-7 
+                    transition-all duration-700 ease-in-out h-full
+                    hover:scale-[1.02] hover:shadow-2xl
+                    ${borderColors[colorIndex]}
+                    ${testimonial.isActive ? 'opacity-100' : 'opacity-70'}
+                  `}
+                  style={{
+                    animation: `colorChange 4s ease-in-out infinite`,
+                    animationDelay: `${idx * 0.5}s`,
+                  }}
+                >
+                  <Quote className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600/40 mb-3 sm:mb-4" />
+                  <p className="text-gray-300 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">
+                    &quot;{testimonial.text}&quot;
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-white font-semibold text-sm sm:text-base">{testimonial.name}</div>
+                      <div className="text-blue-400 text-xs">{testimonial.sport}</div>
+                    </div>
+                    <div className="flex gap-0.5">
+                      {Array.from({ length: testimonial.rating }).map((_, i) => (
+                        <Star key={i} className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500 fill-blue-500" />
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                <div className="flex gap-0.5">
-                  {Array.from({ length: rating }).map((_, i) => (
-                    <Star key={i} className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500 fill-blue-500" />
+              );
+            })}
+          </div>
+
+          {/* Navigation Buttons */}
+          {testimonials.length > visibleCount && (
+            <>
+              <button
+                onClick={prevSlide}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -ml-4 sm:-ml-6 bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-full border border-gray-700 hover:border-blue-500 transition-all duration-300"
+                aria-label="Previous testimonial"
+              >
+                <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
+              <button
+                onClick={nextSlide}
+                className="absolute right-0 top-1/2 -translate-y-1/2 -mr-4 sm:-mr-6 bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-full border border-gray-700 hover:border-blue-500 transition-all duration-300"
+                aria-label="Next testimonial"
+              >
+                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
+            </>
+          )}
+        </div>
+
+        {/* Dots Indicator */}
+        {testimonials.length > visibleCount && (
+          <div className="flex justify-center gap-2 mt-6 sm:mt-8">
+            {Array.from({ length: Math.ceil(testimonials.length / visibleCount) }).map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentIndex(idx * visibleCount)}
+                className={`
+                  h-2 rounded-full transition-all duration-300
+                  ${Math.floor(currentIndex / visibleCount) === idx 
+                    ? 'w-8 bg-blue-500' 
+                    : 'w-2 bg-gray-600 hover:bg-gray-500'}
+                `}
+                aria-label={`Go to testimonial ${idx + 1}`}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Add Feedback Button */}
+        <div className="text-center mt-6 sm:mt-8">
+          <button
+            onClick={() => setIsFormOpen(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-full text-sm sm:text-base font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-600/30"
+          >
+            Share Your Feedback
+          </button>
+        </div>
+      </div>
+
+      {/* Feedback Form Modal */}
+      {isFormOpen && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 sm:p-8 max-w-md w-full max-h-[90vh] overflow-y-auto relative">
+            <button
+              onClick={() => setIsFormOpen(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-6">
+              Share Your <span className="text-blue-400">Experience</span>
+            </h3>
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Your Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-colors"
+                  placeholder="Enter your name"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Sport
+                </label>
+                <input
+                  type="text"
+                  name="sport"
+                  value={formData.sport}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-colors"
+                  placeholder="Enter your sport"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Rating
+                </label>
+                <div className="flex gap-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, rating: star }))}
+                      className="focus:outline-none"
+                    >
+                      <Star
+                        className={`w-8 h-8 transition-colors ${
+                          star <= formData.rating
+                            ? 'text-blue-500 fill-blue-500'
+                            : 'text-gray-600 fill-gray-600'
+                        }`}
+                      />
+                    </button>
                   ))}
                 </div>
               </div>
-            </div>
-          ))}
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Your Feedback
+                </label>
+                <textarea
+                  name="feedback"
+                  value={formData.feedback}
+                  onChange={handleInputChange}
+                  required
+                  rows={4}
+                  className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-colors resize-none"
+                  placeholder="Share your experience..."
+                />
+              </div>
+              
+              <button
+                type="submit"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-[1.02]"
+              >
+                Submit Feedback
+              </button>
+            </form>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Thank You Popup */}
+      {showPopup && (
+        <div className="fixed bottom-4 sm:bottom-8 right-4 sm:right-8 bg-gray-900 border border-blue-500 rounded-xl p-4 sm:p-6 max-w-sm w-full shadow-2xl shadow-blue-500/20">
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0">
+              <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
+                <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            </div>
+            <div>
+              <h4 className="text-white font-semibold text-sm sm:text-base">Thank You!</h4>
+              <p className="text-gray-400 text-sm mt-1">
+                Your feedback has been received. We appreciate your input!
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style jsx>{`
+        @keyframes colorChange {
+          0%, 100% { border-color: rgba(59, 130, 246, 0.6); }
+          25% { border-color: rgba(168, 85, 247, 0.6); }
+          50% { border-color: rgba(236, 72, 153, 0.6); }
+          75% { border-color: rgba(34, 197, 94, 0.6); }
+        }
+      `}</style>
     </section>
   );
 }
