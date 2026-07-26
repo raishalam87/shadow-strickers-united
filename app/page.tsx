@@ -92,7 +92,7 @@ const TypingText = ({
   );
 };
 
-// Wrapper component for AnimatedCounter with styling
+// FIXED: Wrapper component for AnimatedCounter with ALL required props
 const StyledAnimatedCounter = ({ 
   end, 
   suffix = "", 
@@ -123,26 +123,16 @@ const StyledAnimatedCounter = ({
       {/* Shine Effect */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
       
-      {/* Icon with Color Animation */}
-      <div className={`relative w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center mb-2 sm:mb-3 ${color} bg-opacity-20 border ${borderColor} group-hover:scale-110 transition-transform duration-300 animate-icon-float`}>
-        <div className="absolute inset-0 rounded-lg animate-pulse-slow" />
-        {icon}
-      </div>
-      
-      {/* Animated Counter - Only show the number, label will be shown separately */}
-      <div className="relative">
-        <div className={`text-xl sm:text-2xl lg:text-3xl font-extrabold bg-gradient-to-r ${gradient} bg-clip-text text-transparent animate-value-pulse`}>
-          <AnimatedCounter 
-            end={end} 
-            suffix={suffix} 
-            duration={duration}
-          />
-        </div>
-        {/* Label shown separately */}
-        <div className="text-gray-400 text-xs sm:text-sm font-medium mt-0.5 sm:mt-1 group-hover:text-white transition-colors duration-300">
-          {label}
-        </div>
-      </div>
+      {/* FIXED: Passing ALL required props to AnimatedCounter */}
+      <AnimatedCounter 
+        end={end} 
+        suffix={suffix} 
+        duration={duration}
+        label={label}
+        icon={icon}
+        prefix=""
+        decimals={0}
+      />
       
       {/* Decorative Dots */}
       <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -876,12 +866,14 @@ function TestimonialsSection() {
   // Update visible count based on screen size
   useEffect(() => {
     const updateVisibleCount = () => {
-      if (window.innerWidth >= 1024) {
-        setVisibleCount(3);
-      } else if (window.innerWidth >= 768) {
-        setVisibleCount(2);
-      } else {
-        setVisibleCount(1);
+      if (typeof window !== 'undefined') {
+        if (window.innerWidth >= 1024) {
+          setVisibleCount(3);
+        } else if (window.innerWidth >= 768) {
+          setVisibleCount(2);
+        } else {
+          setVisibleCount(1);
+        }
       }
     };
 
