@@ -1,5 +1,8 @@
 'use client';
 
+import { ref, onValue, push, remove } from "firebase/database";
+import { db } from "@/lib/firebase";
+
 import { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Quote, Star, X } from 'lucide-react';
 import Navbar from '@/components/Navbar';
@@ -837,7 +840,7 @@ function BlogSection() {
   );
 }
 
-/* ─── Testimonials Section with localStorage Persistence ───────────────────────────────────────────────── */
+/* ─── Testimonials Section with Firebase Realtime Database ───────────────────────────────────────── */
 function TestimonialsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -872,24 +875,32 @@ function TestimonialsSection() {
     },
   ];
 
-  // Load testimonials from localStorage on component mount
-  const [testimonials, setTestimonials] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('testimonials');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          // If saved data exists and is an array, use it
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            return parsed;
-          }
-        } catch (e) {
-          console.error('Error parsing testimonials:', e);
-        }
+  const [testimonials, setTestimonials] = useState<any[]>(defaultTestimonials);
+
+  // Load feedback from Firebase in real time
+  useEffect(() => {
+    const feedbackRef = ref(db, "testimonials");
+
+    const unsubscribe = onValue(feedbackRef, (snapshot) => {
+      const data = snapshot.val();
+
+      if (data) {
+        const firebaseTestimonials = Object.entries(data)
+          .map(([id, value]: [string, any]) => ({
+            id,
+            ...value,
+            isCustom: true,
+          }))
+          .sort((a: any, b: any) => b.createdAt - a.createdAt);
+
+        setTestimonials([...firebaseTestimonials, ...defaultTestimonials]);
+      } else {
+        setTestimonials(defaultTestimonials);
       }
-    }
-    return defaultTestimonials;
-  });
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   // Update visible count based on screen size
   useEffect(() => {
@@ -944,73 +955,51 @@ function TestimonialsSection() {
     }));
   };
 
-  // Function to save testimonials to localStorage
-  const saveToLocalStorage = (data: any[]) => {
-    if (typeof window !== 'undefined') {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      await push(ref(db, "testimonials"), {
+        name: formData.name.trim(),
+        sport: formData.sport.trim(),
+        rating: Number(formData.rating),
+        text: formData.feedback.trim(),
+        createdAt: Date.now(),
+      });
+
+      setFormData({ name: "", sport: "", rating: 5, feedback: "" });
+      setIsFormOpen(false);
+      setShowPopup(true);
+      setTimeout(() => setShowPopup(false), 3000);
+    } catch (error) {
+      console.error("Feedback save error:", error);
+      alert("Feedback save nahi hua. Please try again.");
+    }
+  };
+
+  const deleteTestimonial = async (testimonial: any) => {
+    if (!testimonial.isCustom) return;
+
+    if (window.confirm("Are you sure you want to delete this testimonial?")) {
       try {
-        localStorage.setItem('testimonials', JSON.stringify(data));
+        await remove(ref(db, `testimonials/${testimonial.id}`));
       } catch (error) {
-        console.error('Error saving to localStorage:', error);
-        if (error instanceof Error && error.name === 'QuotaExceededError') {
-          alert('Storage is full! Please delete some old testimonials.');
-        }
+        console.error("Feedback delete error:", error);
+        alert("Feedback delete nahi hua. Please try again.");
       }
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Create new testimonial
-    const newTestimonial = {
-      name: formData.name,
-      sport: formData.sport,
-      rating: parseInt(formData.rating.toString()),
-      text: formData.feedback
-    };
-    
-    // Update state with new testimonial at the beginning
-    const updatedTestimonials = [newTestimonial, ...testimonials];
-    setTestimonials(updatedTestimonials);
-    
-    // Save to localStorage (Permanent storage)
-    saveToLocalStorage(updatedTestimonials);
-    
-    // Reset form
-    setFormData({
-      name: '',
-      sport: '',
-      rating: 5,
-      feedback: ''
-    });
-    
-    // Close form and show popup
-    setIsFormOpen(false);
-    setShowPopup(true);
-    
-    // Auto-hide popup after 3 seconds
-    setTimeout(() => {
-      setShowPopup(false);
-    }, 3000);
-  };
-
-  // Function to delete a testimonial
-  const deleteTestimonial = (indexToDelete: number) => {
-    if (window.confirm('Are you sure you want to delete this testimonial?')) {
-      const updatedTestimonials = testimonials.filter((_, index) => index !== indexToDelete);
-      setTestimonials(updatedTestimonials);
-      saveToLocalStorage(updatedTestimonials);
-    }
-  };
-
-  // Function to clear all testimonials
-  const clearAllTestimonials = () => {
-    if (window.confirm('Are you sure you want to delete ALL testimonials? This cannot be undone!')) {
-      setTestimonials(defaultTestimonials);
-      saveToLocalStorage(defaultTestimonials);
-      // Show a quick notification
-      setShowPopup(true);
-      setTimeout(() => setShowPopup(false), 2000);
+  const clearAllTestimonials = async () => {
+    if (window.confirm("Are you sure you want to delete ALL custom testimonials? This cannot be undone!")) {
+      try {
+        await remove(ref(db, "testimonials"));
+        setShowPopup(true);
+        setTimeout(() => setShowPopup(false), 2000);
+      } catch (error) {
+        console.error("Feedback clear error:", error);
+        alert("Feedback clear nahi hua. Please try again.");
+      }
     }
   };
 
@@ -1046,7 +1035,7 @@ function TestimonialsSection() {
             Real stories from real athletes who&apos;ve transformed their game with us
           </p>
           <p className="text-green-400 text-xs mt-1">
-            💾 {testimonials.length} testimonials saved locally (permanent)
+            ☁️ {testimonials.length} testimonials saved securely in Firebase
           </p>
         </div>
 
@@ -1076,9 +1065,9 @@ function TestimonialsSection() {
                   }}
                 >
                   {/* Delete button - only show if not default testimonials */}
-                  {testimonials.length > defaultTestimonials.length && (
+                  {testimonial.isCustom && (
                     <button
-                      onClick={() => deleteTestimonial(actualIndex)}
+                      onClick={() => deleteTestimonial(testimonial)}
                       className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-gray-500 hover:text-red-500"
                       aria-label="Delete testimonial"
                     >
