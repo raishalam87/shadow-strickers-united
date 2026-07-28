@@ -756,6 +756,14 @@ function BlogSection() {
     'https://i.ibb.co/mWTp0Z0/6e803c39-416d-4c92-8194-1ecd476c1158.png',
     'https://i.ibb.co/pr6vC5qM/52e4d02f-05ed-4e8c-93f8-57fd64432186.png',
     'https://i.ibb.co/prXZJVzW/028b69ed-7ade-4e93-933e-c648009732a7.png',
+    'https://i.ibb.co/WN75DxqH/image.png',
+    'https://i.ibb.co/pjChzrRZ/3f4a26d0-0721-43e0-a3a3-b6977c33e30d.png',
+    'https://i.ibb.co/Ld74NY38/image-7.png',
+    'https://i.ibb.co/N6ZPbJ2P/image-8.png',
+    'https://i.ibb.co/2YnN472Q/image-9.png',
+    'https://i.ibb.co/TqtSszLW/image-10.png',
+    'https://i.ibb.co/Rph0vVMb/image-11.png',
+    'https://i.ibb.co/Gf0z3T7N/image-12.png'
   ];
 
   const initialDisplayCount = 8;
@@ -829,7 +837,7 @@ function BlogSection() {
   );
 }
 
-/* ─── Testimonials Section ───────────────────────────────────────────────── */
+/* ─── Testimonials Section with localStorage Persistence ───────────────────────────────────────────────── */
 function TestimonialsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -842,7 +850,8 @@ function TestimonialsSection() {
   });
   const [visibleCount, setVisibleCount] = useState(3);
 
-  const [testimonials, setTestimonials] = useState([
+  // Default testimonials
+  const defaultTestimonials = [
     {
       name: 'Arjun Mehta',
       sport: 'Cricket',
@@ -861,7 +870,26 @@ function TestimonialsSection() {
       rating: 5,
       text: 'Master Ji-Won is an incredible coach. The discipline and technique I learned here helped me win gold at the national open.',
     },
-  ]);
+  ];
+
+  // Load testimonials from localStorage on component mount
+  const [testimonials, setTestimonials] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('testimonials');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          // If saved data exists and is an array, use it
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed;
+          }
+        } catch (e) {
+          console.error('Error parsing testimonials:', e);
+        }
+      }
+    }
+    return defaultTestimonials;
+  });
 
   // Update visible count based on screen size
   useEffect(() => {
@@ -916,10 +944,24 @@ function TestimonialsSection() {
     }));
   };
 
+  // Function to save testimonials to localStorage
+  const saveToLocalStorage = (data: any[]) => {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('testimonials', JSON.stringify(data));
+      } catch (error) {
+        console.error('Error saving to localStorage:', error);
+        if (error instanceof Error && error.name === 'QuotaExceededError') {
+          alert('Storage is full! Please delete some old testimonials.');
+        }
+      }
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Add new testimonial
+    // Create new testimonial
     const newTestimonial = {
       name: formData.name,
       sport: formData.sport,
@@ -927,7 +969,12 @@ function TestimonialsSection() {
       text: formData.feedback
     };
     
-    setTestimonials((prev) => [...prev, newTestimonial]);
+    // Update state with new testimonial at the beginning
+    const updatedTestimonials = [newTestimonial, ...testimonials];
+    setTestimonials(updatedTestimonials);
+    
+    // Save to localStorage (Permanent storage)
+    saveToLocalStorage(updatedTestimonials);
     
     // Reset form
     setFormData({
@@ -945,6 +992,26 @@ function TestimonialsSection() {
     setTimeout(() => {
       setShowPopup(false);
     }, 3000);
+  };
+
+  // Function to delete a testimonial
+  const deleteTestimonial = (indexToDelete: number) => {
+    if (window.confirm('Are you sure you want to delete this testimonial?')) {
+      const updatedTestimonials = testimonials.filter((_, index) => index !== indexToDelete);
+      setTestimonials(updatedTestimonials);
+      saveToLocalStorage(updatedTestimonials);
+    }
+  };
+
+  // Function to clear all testimonials
+  const clearAllTestimonials = () => {
+    if (window.confirm('Are you sure you want to delete ALL testimonials? This cannot be undone!')) {
+      setTestimonials(defaultTestimonials);
+      saveToLocalStorage(defaultTestimonials);
+      // Show a quick notification
+      setShowPopup(true);
+      setTimeout(() => setShowPopup(false), 2000);
+    }
   };
 
   const getVisibleTestimonials = () => {
@@ -978,6 +1045,9 @@ function TestimonialsSection() {
           <p className="text-gray-400 mt-2 text-sm sm:text-base max-w-2xl mx-auto">
             Real stories from real athletes who&apos;ve transformed their game with us
           </p>
+          <p className="text-green-400 text-xs mt-1">
+            💾 {testimonials.length} testimonials saved locally (permanent)
+          </p>
         </div>
 
         {/* Carousel Container */}
@@ -989,13 +1059,14 @@ function TestimonialsSection() {
           }`}>
             {visibleTestimonials.map((testimonial, idx) => {
               const colorIndex = (testimonial.index + idx) % borderColors.length;
+              const actualIndex = (currentIndex + idx) % testimonials.length;
               return (
                 <div
-                  key={`${testimonial.name}-${idx}`}
+                  key={`${testimonial.name}-${idx}-${testimonial.index}`}
                   className={`
                     bg-gray-900 border-2 rounded-xl sm:rounded-2xl p-5 sm:p-7 
                     transition-all duration-700 ease-in-out h-full
-                    hover:scale-[1.02] hover:shadow-2xl
+                    hover:scale-[1.02] hover:shadow-2xl relative group
                     ${borderColors[colorIndex]}
                     ${testimonial.isActive ? 'opacity-100' : 'opacity-70'}
                   `}
@@ -1004,6 +1075,17 @@ function TestimonialsSection() {
                     animationDelay: `${idx * 0.5}s`,
                   }}
                 >
+                  {/* Delete button - only show if not default testimonials */}
+                  {testimonials.length > defaultTestimonials.length && (
+                    <button
+                      onClick={() => deleteTestimonial(actualIndex)}
+                      className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-gray-500 hover:text-red-500"
+                      aria-label="Delete testimonial"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                  
                   <Quote className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600/40 mb-3 sm:mb-4" />
                   <p className="text-gray-300 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">
                     &quot;{testimonial.text}&quot;
@@ -1064,14 +1146,28 @@ function TestimonialsSection() {
           </div>
         )}
 
-        {/* Add Feedback Button */}
-        <div className="text-center mt-6 sm:mt-8">
+        {/* Action Buttons */}
+        <div className="flex flex-wrap items-center justify-center gap-3 mt-6 sm:mt-8">
           <button
             onClick={() => setIsFormOpen(true)}
             className="bg-blue-600 hover:bg-blue-700 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-full text-sm sm:text-base font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-600/30"
           >
             Share Your Feedback
           </button>
+          
+          {testimonials.length > defaultTestimonials.length && (
+            <>
+              <button
+                onClick={clearAllTestimonials}
+                className="bg-red-600/20 hover:bg-red-600/30 text-red-400 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-sm sm:text-base font-semibold transition-all duration-300 border border-red-600/30"
+              >
+                Clear All
+              </button>
+              <span className="text-gray-500 text-xs">
+                ({testimonials.length - defaultTestimonials.length} custom testimonials)
+              </span>
+            </>
+          )}
         </div>
       </div>
 
@@ -1173,7 +1269,7 @@ function TestimonialsSection() {
 
       {/* Thank You Popup */}
       {showPopup && (
-        <div className="fixed bottom-4 sm:bottom-8 right-4 sm:right-8 bg-gray-900 border border-blue-500 rounded-xl p-4 sm:p-6 max-w-sm w-full shadow-2xl shadow-blue-500/20">
+        <div className="fixed bottom-4 sm:bottom-8 right-4 sm:right-8 bg-gray-900 border border-blue-500 rounded-xl p-4 sm:p-6 max-w-sm w-full shadow-2xl shadow-blue-500/20 animate-slide-up">
           <div className="flex items-start gap-3">
             <div className="flex-shrink-0">
               <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
@@ -1183,9 +1279,9 @@ function TestimonialsSection() {
               </div>
             </div>
             <div>
-              <h4 className="text-white font-semibold text-sm sm:text-base">Thank You!</h4>
+              <h4 className="text-white font-semibold text-sm sm:text-base">Thank You! 💾</h4>
               <p className="text-gray-400 text-sm mt-1">
-                Your feedback has been received. We appreciate your input!
+                Your feedback has been saved permanently!
               </p>
             </div>
           </div>
@@ -1198,6 +1294,13 @@ function TestimonialsSection() {
           25% { border-color: rgba(168, 85, 247, 0.6); }
           50% { border-color: rgba(236, 72, 153, 0.6); }
           75% { border-color: rgba(34, 197, 94, 0.6); }
+        }
+        @keyframes slide-up {
+          from { transform: translateY(100px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-slide-up {
+          animation: slide-up 0.3s ease-out;
         }
       `}</style>
     </section>
