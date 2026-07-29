@@ -990,19 +990,6 @@ function TestimonialsSection() {
     }
   };
 
-  const clearAllTestimonials = async () => {
-    if (window.confirm("Are you sure you want to delete ALL custom testimonials? This cannot be undone!")) {
-      try {
-        await remove(ref(db, "testimonials"));
-        setShowPopup(true);
-        setTimeout(() => setShowPopup(false), 2000);
-      } catch (error) {
-        console.error("Feedback clear error:", error);
-        alert("Feedback clear nahi hua. Please try again.");
-      }
-    }
-  };
-
   const getVisibleTestimonials = () => {
     const items = [];
     const total = testimonials.length;
@@ -1035,7 +1022,7 @@ function TestimonialsSection() {
             Real stories from real athletes who&apos;ve transformed their game with us
           </p>
           <p className="text-green-400 text-xs mt-1">
-            ☁️ {testimonials.length} testimonials saved securely in Firebase
+            ☁️ {testimonials.length} testimonials saved securely in database
           </p>
         </div>
 
@@ -1135,7 +1122,7 @@ function TestimonialsSection() {
           </div>
         )}
 
-        {/* Action Buttons */}
+        {/* Action Button - Only Share Your Feedback */}
         <div className="flex flex-wrap items-center justify-center gap-3 mt-6 sm:mt-8">
           <button
             onClick={() => setIsFormOpen(true)}
@@ -1145,17 +1132,9 @@ function TestimonialsSection() {
           </button>
           
           {testimonials.length > defaultTestimonials.length && (
-            <>
-              <button
-                onClick={clearAllTestimonials}
-                className="bg-red-600/20 hover:bg-red-600/30 text-red-400 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-sm sm:text-base font-semibold transition-all duration-300 border border-red-600/30"
-              >
-                Clear All
-              </button>
-              <span className="text-gray-500 text-xs">
-                ({testimonials.length - defaultTestimonials.length} custom testimonials)
-              </span>
-            </>
+            <span className="text-gray-500 text-xs">
+              ({testimonials.length - defaultTestimonials.length} custom testimonials)
+            </span>
           )}
         </div>
       </div>
