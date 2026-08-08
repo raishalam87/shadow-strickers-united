@@ -766,7 +766,15 @@ function BlogSection() {
     'https://i.ibb.co/2YnN472Q/image-9.png',
     'https://i.ibb.co/TqtSszLW/image-10.png',
     'https://i.ibb.co/Rph0vVMb/image-11.png',
-    'https://i.ibb.co/Gf0z3T7N/image-12.png'
+    'https://i.ibb.co/Gf0z3T7N/image-12.png',
+    'https://i.ibb.co/LDqvW5RT/acfaa48f-915a-45b0-bd9c-823856160358.png',
+    'https://i.ibb.co/39N1TjWp/21c93eac-0b94-4ecc-a400-c1e42c51df5b.png',
+    'https://i.ibb.co/7tfCr44P/03edd03c-c101-4729-88ed-22e6436cdbf3.png',
+    'https://i.ibb.co/5XmnyJwL/ff8031fd-f866-4be9-8a38-2a4d939f7d4b.png',
+    'https://i.ibb.co/HT9Dy8gG/c978fbb1-bddf-46cd-addb-57b7cb1206f6.png',
+    'https://i.ibb.co/HTF9tYvs/26a2bdec-32c3-4cb7-a6d6-1a34e7dc88b1.png',
+    'https://i.ibb.co/4ZGwPVRg/e04b7b75-2a1e-4d1d-a90b-1e9e576122c4.png',
+    'https://i.ibb.co/N2MzWjrc/440ac602-1923-47ef-a1a7-3e453b57d781.png'
   ];
 
   const initialDisplayCount = 8;
