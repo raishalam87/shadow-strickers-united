@@ -737,6 +737,7 @@ function AchievementsSection() {
 /* ─── Blog Section with Gallery ───────────────────────────────────────────────── */
 function BlogSection() {
   const [showAll, setShowAll] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
   
   const images = [
     'https://i.ibb.co/gbzNwWzH/image.jpg',
@@ -780,55 +781,117 @@ function BlogSection() {
   const initialDisplayCount = 8;
   const displayedImages = showAll ? images : images.slice(0, initialDisplayCount);
 
+  const openFullScreen = (img) => {
+    setSelectedImage(img);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeFullScreen = () => {
+    setSelectedImage(null);
+    document.body.style.overflow = 'auto';
+  };
+
+  // Close modal on Escape key press
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') {
+        closeFullScreen();
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, []);
+
   return (
-    <section id="blog" className="bg-gray-950 py-12 lg:py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-4 sm:mb-6">
-          <div className="text-center sm:text-left">
-            <span className="text-blue-400 text-xs sm:text-sm font-semibold tracking-widest uppercase">Gallery</span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mt-2">
-              Sports <span className="text-blue-400">Moments</span>
-            </h2>
-          </div>
-          <span className="text-gray-500 text-sm">
-            {displayedImages.length} of {images.length} photos
-          </span>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
-          {displayedImages.map((img, index) => (
-            <div
-              key={index}
-              className="relative aspect-square overflow-hidden rounded-lg sm:rounded-xl group cursor-pointer"
-            >
-              <img
-                src={img}
-                alt={`Sports moment ${index + 1}`}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <span className="text-[10px] sm:text-xs font-medium bg-blue-600 px-2 py-0.5 rounded-full">
-                  #{index + 1}
-                </span>
-              </div>
+    <>
+      <section id="blog" className="bg-gray-950 py-12 lg:py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-4 sm:mb-6">
+            <div className="text-center sm:text-left">
+              <span className="text-blue-400 text-xs sm:text-sm font-semibold tracking-widest uppercase">Gallery</span>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mt-2">
+                Sports <span className="text-blue-400">Moments</span>
+              </h2>
             </div>
-          ))}
-        </div>
+            <span className="text-gray-500 text-sm">
+              {displayedImages.length} of {images.length} photos
+            </span>
+          </div>
 
-        {images.length > initialDisplayCount && (
-          <div className="flex justify-center mt-6 sm:mt-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
+            {displayedImages.map((img, index) => (
+              <div
+                key={index}
+                className="relative aspect-square overflow-hidden rounded-lg sm:rounded-xl group cursor-pointer"
+                onClick={() => openFullScreen(img)}
+              >
+                <img
+                  src={img}
+                  alt={`Sports moment ${index + 1}`}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <span className="text-[10px] sm:text-xs font-medium bg-blue-600 px-2 py-0.5 rounded-full">
+                    #{index + 1}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {images.length > initialDisplayCount && (
+            <div className="flex justify-center mt-6 sm:mt-8">
+              <button
+                onClick={() => setShowAll(!showAll)}
+                className="group relative inline-flex items-center gap-2 px-6 sm:px-8 py-2 sm:py-2.5 bg-transparent border-2 border-blue-600 text-blue-400 font-semibold text-sm sm:text-base rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300"
+                aria-label={showAll ? 'Show Less' : 'Show More'}
+              >
+                <span>{showAll ? 'Show Less' : 'Show More'}</span>
+                <svg
+                  className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 ${
+                    showAll ? 'rotate-180' : ''
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Full Screen Image Modal */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4 animate-fadeIn"
+          onClick={closeFullScreen}
+        >
+          <div className="relative max-w-7xl max-h-[90vh] w-full h-full flex items-center justify-center">
+            <img
+              src={selectedImage}
+              alt="Full screen view"
+              className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+            
+            {/* Close Button */}
             <button
-              onClick={() => setShowAll(!showAll)}
-              className="group relative inline-flex items-center gap-2 px-6 sm:px-8 py-2 sm:py-2.5 bg-transparent border-2 border-blue-600 text-blue-400 font-semibold text-sm sm:text-base rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300"
-              aria-label={showAll ? 'Show Less' : 'Show More'}
+              onClick={closeFullScreen}
+              className="absolute top-4 right-4 text-white/80 hover:text-white bg-black/50 hover:bg-black/70 rounded-full p-2 transition-all duration-300"
+              aria-label="Close full screen"
             >
-              <span>{showAll ? 'Show Less' : 'Show More'}</span>
               <svg
-                className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 ${
-                  showAll ? 'rotate-180' : ''
-                }`}
+                className="w-8 h-8"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -837,17 +900,72 @@ function BlogSection() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
+                  d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
             </button>
+
+            {/* Navigation Arrows */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                const currentIndex = images.indexOf(selectedImage);
+                const prevIndex = currentIndex > 0 ? currentIndex - 1 : images.length - 1;
+                setSelectedImage(images[prevIndex]);
+              }}
+              className="absolute left-4 text-white/80 hover:text-white bg-black/50 hover:bg-black/70 rounded-full p-2 transition-all duration-300"
+              aria-label="Previous image"
+            >
+              <svg
+                className="w-6 h-6 sm:w-8 sm:h-8"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                const currentIndex = images.indexOf(selectedImage);
+                const nextIndex = currentIndex < images.length - 1 ? currentIndex + 1 : 0;
+                setSelectedImage(images[nextIndex]);
+              }}
+              className="absolute right-4 text-white/80 hover:text-white bg-black/50 hover:bg-black/70 rounded-full p-2 transition-all duration-300"
+              aria-label="Next image"
+            >
+              <svg
+                className="w-6 h-6 sm:w-8 sm:h-8"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
+
+            {/* Image Counter */}
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white/80 bg-black/50 px-4 py-2 rounded-full text-sm">
+              {images.indexOf(selectedImage) + 1} / {images.length}
+            </div>
           </div>
-        )}
-      </div>
-    </section>
+        </div>
+      )}
+    </>
   );
 }
-
 /* ─── Testimonials Section with Firebase Realtime Database ───────────────────────────────────────── */
 function TestimonialsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
