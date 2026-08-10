@@ -734,10 +734,11 @@ function AchievementsSection() {
   );
 }
 
+
 /* ─── Blog Section with Gallery ───────────────────────────────────────────────── */
 function BlogSection() {
   const [showAll, setShowAll] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   
   const images = [
     'https://i.ibb.co/gbzNwWzH/image.jpg',
@@ -781,7 +782,8 @@ function BlogSection() {
   const initialDisplayCount = 8;
   const displayedImages = showAll ? images : images.slice(0, initialDisplayCount);
 
-  const openFullScreen = (img) => {
+  // ✅ FIX: Added type annotation for 'img' parameter
+  const openFullScreen = (img: string) => {
     setSelectedImage(img);
     document.body.style.overflow = 'hidden';
   };
@@ -793,7 +795,7 @@ function BlogSection() {
 
   // Close modal on Escape key press
   useEffect(() => {
-    const handleEsc = (e) => {
+    const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         closeFullScreen();
       }
@@ -966,6 +968,8 @@ function BlogSection() {
     </>
   );
 }
+
+
 /* ─── Testimonials Section with Firebase Realtime Database ───────────────────────────────────────── */
 function TestimonialsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
