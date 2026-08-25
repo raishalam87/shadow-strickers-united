@@ -679,13 +679,55 @@ function CoachesSection() {
 
 /* ─── Achievements ───────────────────────────────────────────── */
 function AchievementsSection() {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
   const achievements = [
-    { year: '2023', title: 'National Youth Championship', sport: 'Cricket', medal: 'Gold' },
-    { year: '2023', title: 'Regional Football League', sport: 'Football', medal: 'Silver' },
-    { year: '2022', title: 'State Basketball Tournament', sport: 'Basketball', medal: 'Gold' },
-    { year: '2022', title: 'National Taekwondo Open', sport: 'Taekwondo', medal: 'Gold' },
-    { year: '2021', title: 'Under-19 Cricket Series', sport: 'Cricket', medal: 'Gold' },
-    { year: '2021', title: 'Youth Football Cup', sport: 'Football', medal: 'Bronze' },
+    {
+      year: '2026',
+      title: '4th Motivational Roller-Skating Championship 2026',
+      sport: 'Roller Skating',
+      medal: 'Silver',
+      player: 'Aadvik Yadav',
+      category: '4 to 6 Adjustable Category',
+      image:
+        'https://i.ibb.co/nsg77KJj/Whats-App-Image-2026-08-24-at-9-59-08-AM.jpg',
+    },
+    {
+      year: '2023',
+      title: 'National Youth Championship',
+      sport: 'Cricket',
+      medal: 'Gold',
+    },
+    {
+      year: '2023',
+      title: 'Regional Football League',
+      sport: 'Football',
+      medal: 'Silver',
+    },
+    {
+      year: '2022',
+      title: 'State Basketball Tournament',
+      sport: 'Basketball',
+      medal: 'Gold',
+    },
+    {
+      year: '2022',
+      title: 'National Taekwondo Open',
+      sport: 'Taekwondo',
+      medal: 'Gold',
+    },
+    {
+      year: '2021',
+      title: 'Under-19 Cricket Series',
+      sport: 'Cricket',
+      medal: 'Gold',
+    },
+    {
+      year: '2021',
+      title: 'Youth Football Cup',
+      sport: 'Football',
+      medal: 'Bronze',
+    },
   ];
 
   const medalColor: Record<string, string> = {
@@ -695,42 +737,142 @@ function AchievementsSection() {
   };
 
   return (
-    <section id="achievements" className="bg-black py-12 lg:py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-6 sm:mb-8">
-          <span className="text-blue-400 text-xs sm:text-sm font-semibold tracking-widest uppercase">Achievements</span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mt-2 mb-2 sm:mb-3">
-            Our Trophy <span className="text-blue-400">Cabinet</span>
-          </h2>
-          <p className="text-gray-400 text-sm sm:text-base max-w-xl mx-auto px-4">
-            Decades of hard work reflected in our athletes&apos; success on every stage.
-          </p>
-        </div>
+    <>
+      <section id="achievements" className="bg-black py-12 lg:py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-          {achievements.map(({ year, title, sport, medal }) => (
-            <div
-              key={`${year}-${title}`}
-              className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6 flex items-start gap-3 sm:gap-4 hover:border-blue-500/40 transition-colors"
-            >
-              <div className="bg-blue-600/20 border border-blue-600/30 rounded-lg p-2 sm:p-3 shrink-0">
-                <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-wrap items-center justify-between gap-1 sm:gap-2 mb-1">
-                  <span className="text-gray-500 text-xs">{year}</span>
-                  <span className={`text-xs px-1.5 sm:px-2 py-0.5 rounded-full border font-medium ${medalColor[medal]}`}>
-                    {medal}
-                  </span>
+          {/* Heading */}
+          <div className="text-center mb-6 sm:mb-8">
+            <span className="text-blue-400 text-xs sm:text-sm font-semibold tracking-widest uppercase">
+              Achievements
+            </span>
+
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mt-2 mb-2 sm:mb-3">
+              Our Trophy <span className="text-blue-400">Cabinet</span>
+            </h2>
+
+            <p className="text-gray-400 text-sm sm:text-base max-w-xl mx-auto px-4">
+              Decades of hard work reflected in our athletes&apos; success on every stage.
+            </p>
+          </div>
+
+          {/* Achievement Cards */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+
+            {achievements.map(
+              ({
+                year,
+                title,
+                sport,
+                medal,
+                player,
+                category,
+                image,
+              }) => (
+                <div
+                  key={`${year}-${title}`}
+                  className={`bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-5 flex items-start gap-3 sm:gap-4 transition-all duration-300 hover:border-blue-500/40 hover:bg-gray-800/80 ${
+                    image
+                      ? 'cursor-pointer hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/10'
+                      : ''
+                  }`}
+                  onClick={() => image && setSelectedImage(image)}
+                >
+
+                  {/* IMAGE / TROPHY */}
+                  {image ? (
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-lg overflow-hidden border border-gray-700 bg-gray-800 group">
+                      <img
+                        src={image}
+                        alt={`${player} achievement`}
+                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                      />
+                    </div>
+                  ) : (
+                    <div className="bg-blue-600/20 border border-blue-600/30 rounded-lg p-2 sm:p-3 shrink-0">
+                      <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
+                    </div>
+                  )}
+
+                  {/* CONTENT */}
+                  <div className="flex-1 min-w-0">
+
+                    {/* Year + Medal */}
+                    <div className="flex flex-wrap items-center justify-between gap-1 sm:gap-2 mb-1">
+                      <span className="text-gray-500 text-xs">
+                        {year}
+                      </span>
+
+                      <span
+                        className={`text-xs px-1.5 sm:px-2 py-0.5 rounded-full border font-medium ${
+                          medalColor[medal]
+                        }`}
+                      >
+                        {medal}
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-white font-semibold text-xs sm:text-sm mb-1 leading-snug">
+                      {title}
+                    </h3>
+
+                    {/* Sport */}
+                    <span className="text-blue-400 text-xs">
+                      {sport}
+                    </span>
+
+                    {/* Player Details */}
+                    {player && (
+                      <div className="mt-2">
+                        <p className="text-gray-300 text-xs font-medium">
+                          🏅 {player}
+                        </p>
+
+                        <p className="text-gray-500 text-[11px] mt-0.5">
+                          {category}
+                        </p>
+
+                        <p className="text-blue-400 text-[10px] mt-1">
+                          Click image to view
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <h3 className="text-white font-semibold text-xs sm:text-sm mb-1 truncate">{title}</h3>
-                <span className="text-blue-400 text-xs">{sport}</span>
-              </div>
-            </div>
-          ))}
+              )
+            )}
+
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* FULLSCREEN IMAGE POPUP */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 sm:p-8"
+          onClick={() => setSelectedImage(null)}
+        >
+
+          {/* Close Button */}
+          <button
+            onClick={() => setSelectedImage(null)}
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center text-white text-2xl transition"
+            aria-label="Close image"
+          >
+            ×
+          </button>
+
+          {/* Large Image */}
+          <img
+            src={selectedImage}
+            alt="Aadvik Yadav - Silver Medal Achievement"
+            className="max-w-[95vw] max-h-[92vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
+    </>
   );
 }
 
